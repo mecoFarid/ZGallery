@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.model.GlideUrl;
@@ -69,16 +70,25 @@ public class ViewPagerAdapter extends PagerAdapter {
 
         final ImageView imageView = (ImageView) itemView.findViewById(R.id.iv);
 
-        LazyHeaders.Builder lazyHeaderBuilder = new LazyHeaders.Builder();
-        for (Map.Entry<String, String> entry: headers.entrySet()){
-            lazyHeaderBuilder.addHeader(entry.getKey(), entry.getValue());
-        }
-        GlideUrl glideUrl = new GlideUrl(
-                images.get(position),
-                lazyHeaderBuilder.build()
-        );
+        RequestBuilder<Drawable> requestBuilder;
+        if (!headers.isEmpty()){
 
-        Glide.with(activity).load(glideUrl).listener(new RequestListener<Drawable>() {
+            LazyHeaders.Builder lazyHeaderBuilder = new LazyHeaders.Builder();
+            for (Map.Entry<String, String> entry: headers.entrySet()){
+                lazyHeaderBuilder.addHeader(entry.getKey(), entry.getValue());
+            }
+
+             GlideUrl glideUrl = new GlideUrl(
+                    images.get(position),
+                    lazyHeaderBuilder.build()
+            );
+
+            requestBuilder = Glide.with(activity).load(glideUrl);
+        }else {
+            requestBuilder =  Glide.with(activity).load(images.get(position));
+        }
+
+        requestBuilder.listener(new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                 return false;

@@ -3,12 +3,14 @@ package com.mzelzoghbi.zgallery.adapters;
 import android.app.Activity;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 import com.mzelzoghbi.zgallery.HorizontalImageViewHolder;
@@ -43,16 +45,26 @@ public class HorizontalListAdapters extends RecyclerView.Adapter<HorizontalImage
 
     @Override
     public void onBindViewHolder(HorizontalImageViewHolder holder, final int position) {
-        LazyHeaders.Builder lazyHeaderBuilder = new LazyHeaders.Builder();
-        for (Map.Entry<String, String> entry: headers.entrySet()){
-            lazyHeaderBuilder.addHeader(entry.getKey(), entry.getValue());
-        }
-        GlideUrl glideUrl = new GlideUrl(
-                images.get(position),
-                lazyHeaderBuilder.build()
-        );
 
-        Glide.with(activity).load(glideUrl).into(holder.image);
+        RequestBuilder<Drawable> requestBuilder;
+        if (!headers.isEmpty()){
+
+            LazyHeaders.Builder lazyHeaderBuilder = new LazyHeaders.Builder();
+            for (Map.Entry<String, String> entry: headers.entrySet()){
+                lazyHeaderBuilder.addHeader(entry.getKey(), entry.getValue());
+            }
+
+            GlideUrl glideUrl = new GlideUrl(
+                    images.get(position),
+                    lazyHeaderBuilder.build()
+            );
+
+            requestBuilder = Glide.with(activity).load(glideUrl);
+        }else {
+            requestBuilder =  Glide.with(activity).load(images.get(position));
+        }
+        requestBuilder.into(holder.image);
+
         ColorMatrix matrix = new ColorMatrix();
         if (selectedItem != position) {
             matrix.setSaturation(0);
