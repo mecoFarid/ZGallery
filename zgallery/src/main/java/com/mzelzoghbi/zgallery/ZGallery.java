@@ -7,6 +7,7 @@ import com.mzelzoghbi.zgallery.activities.ZGalleryActivity;
 import com.mzelzoghbi.zgallery.entities.ZColor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by mohamedzakaria on 8/11/16.
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 public class ZGallery {
     private Activity mActivity;
     private ArrayList<String> imagesURLs;
+    private HashMap<String, String> headers;
     private String title;
     private int spanCount = 2;
     private int toolbarColor = -1;
@@ -30,12 +32,21 @@ public class ZGallery {
      * @param imagesURLs Image URLs to be displayed
      */
     public static ZGallery with(Activity activity, ArrayList<String> imagesURLs) {
-        return new ZGallery(activity, imagesURLs);
+        return new ZGallery(activity, new HashMap<String, String>(),imagesURLs);
+    }
+
+    /**
+     * @param activity   Refrence from current activity
+     * @param imagesURLs Image URLs to be displayed
+     */
+    public static ZGallery withHeaders(Activity activity, HashMap<String, String> headers, ArrayList<String> imagesURLs) {
+        return new ZGallery(activity, headers,imagesURLs);
     }
 
 
-    private ZGallery(Activity activity, ArrayList<String> imagesURLs) {
+    private ZGallery(Activity activity, HashMap<String, String> headers,ArrayList<String> imagesURLs) {
         this.imagesURLs = imagesURLs;
+        this.headers = headers;
         this.mActivity = activity;
     }
 
@@ -94,6 +105,7 @@ public class ZGallery {
     public void show() {
         Intent gridActivity = new Intent(mActivity, ZGalleryActivity.class);
         gridActivity.putExtra(Constants.IntentPassingParams.IMAGES, imagesURLs);
+        gridActivity.putExtra(Constants.IntentPassingParams.HEADERS, headers);
         gridActivity.putExtra(Constants.IntentPassingParams.TITLE, title);
         gridActivity.putExtra(Constants.IntentPassingParams.TOOLBAR_COLOR_ID, toolbarColor);
         gridActivity.putExtra(Constants.IntentPassingParams.TOOLBAR_TITLE_COLOR, color);

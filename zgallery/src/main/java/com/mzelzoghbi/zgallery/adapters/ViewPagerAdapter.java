@@ -18,11 +18,15 @@ import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.mzelzoghbi.zgallery.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -34,15 +38,17 @@ public class ViewPagerAdapter extends PagerAdapter {
     Activity activity;
     LayoutInflater mLayoutInflater;
     ArrayList<String> images;
+    HashMap<String, String> headers;
     PhotoViewAttacher mPhotoViewAttacher;
     private boolean isShowing = true;
     private Toolbar toolbar;
     private RecyclerView imagesHorizontalList;
 
-    public ViewPagerAdapter(Activity activity, ArrayList<String> images, Toolbar toolbar, RecyclerView imagesHorizontalList) {
+    public ViewPagerAdapter(Activity activity, HashMap<String, String> headers, ArrayList<String> images, Toolbar toolbar, RecyclerView imagesHorizontalList) {
         this.activity = activity;
         mLayoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.images = images;
+        this.headers = headers;
         this.toolbar = toolbar;
         this.imagesHorizontalList = imagesHorizontalList;
     }
@@ -62,7 +68,17 @@ public class ViewPagerAdapter extends PagerAdapter {
         View itemView = mLayoutInflater.inflate(R.layout.z_pager_item, container, false);
 
         final ImageView imageView = (ImageView) itemView.findViewById(R.id.iv);
-        Glide.with(activity).load(images.get(position)).listener(new RequestListener<Drawable>() {
+
+        LazyHeaders.Builder lazyHeaderBuilder = new LazyHeaders.Builder();
+        for (Map.Entry<String, String> entry: headers.entrySet()){
+            lazyHeaderBuilder.addHeader(entry.getKey(), entry.getValue());
+        }
+        GlideUrl glideUrl = new GlideUrl(
+                images.get(position),
+                lazyHeaderBuilder.build()
+        );
+
+        Glide.with(activity).load(glideUrl).listener(new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                 return false;

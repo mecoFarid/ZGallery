@@ -34,7 +34,7 @@ public final class ZGridActivity extends BaseActivity implements GridClickListen
         imgPlaceHolderResId = getIntent().getIntExtra(Constants.IntentPassingParams.IMG_PLACEHOLDER, -1);
         spanCount = getIntent().getIntExtra(Constants.IntentPassingParams.COUNT, 2);
 
-        adapter = new GridImagesAdapter(this, imageURLs, imgPlaceHolderResId);
+        adapter = new GridImagesAdapter(this, headers,imageURLs, imgPlaceHolderResId);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, spanCount));
         mRecyclerView.setAdapter(adapter);
     }
@@ -49,8 +49,7 @@ public final class ZGridActivity extends BaseActivity implements GridClickListen
 
     @Override
     public void onClick(int pos) {
-        ZGallery.with(this, imageURLs)
-                .setToolbarTitleColor(ZColor.WHITE)
+        ZGallery.withHeaders(this, headers, imageURLs).setToolbarTitleColor(ZColor.WHITE)
                 .setToolbarColorResId(toolbarColorResId)
                 .setSelectedImgPosition(pos)
                 .setTitle(mToolbar.getTitle().toString())

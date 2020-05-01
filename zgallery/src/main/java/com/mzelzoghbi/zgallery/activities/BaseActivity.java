@@ -12,6 +12,7 @@ import com.mzelzoghbi.zgallery.R;
 import com.mzelzoghbi.zgallery.entities.ZColor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by mohamedzakaria on 8/11/16.
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 public abstract class BaseActivity extends AppCompatActivity {
     protected Toolbar mToolbar;
     protected ArrayList<String> imageURLs;
+    protected HashMap<String, String> headers;
     protected ZColor toolbarTitleColor;
     protected int toolbarColorResId;
     private String title;
@@ -32,6 +34,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         // get values
         imageURLs = getIntent().getStringArrayListExtra(Constants.IntentPassingParams.IMAGES);
+        headers = (HashMap<String, String>) getIntent().getSerializableExtra(Constants.IntentPassingParams.HEADERS);
         toolbarColorResId = getIntent().getIntExtra(Constants.IntentPassingParams.TOOLBAR_COLOR_ID, -1);
         title = getIntent().getStringExtra(Constants.IntentPassingParams.TITLE);
         toolbarTitleColor = (ZColor) getIntent().getSerializableExtra(Constants.IntentPassingParams.TOOLBAR_TITLE_COLOR);

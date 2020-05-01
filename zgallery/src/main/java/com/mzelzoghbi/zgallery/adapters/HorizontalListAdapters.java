@@ -9,24 +9,30 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.mzelzoghbi.zgallery.HorizontalImageViewHolder;
 import com.mzelzoghbi.zgallery.OnImgClick;
 import com.mzelzoghbi.zgallery.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by mohamedzakaria on 8/12/16.
  */
 public class HorizontalListAdapters extends RecyclerView.Adapter<HorizontalImageViewHolder> {
     ArrayList<String> images;
+    HashMap<String, String> headers;
     Activity activity;
     int selectedItem = -1;
     OnImgClick imgClick;
 
-    public HorizontalListAdapters(Activity activity, ArrayList<String> images, OnImgClick imgClick) {
+    public HorizontalListAdapters(Activity activity, HashMap<String, String> headers, ArrayList<String> images, OnImgClick imgClick) {
         this.activity = activity;
         this.images = images;
+        this.headers = headers;
         this.imgClick = imgClick;
     }
 
@@ -37,7 +43,16 @@ public class HorizontalListAdapters extends RecyclerView.Adapter<HorizontalImage
 
     @Override
     public void onBindViewHolder(HorizontalImageViewHolder holder, final int position) {
-        Glide.with(activity).load(images.get(position)).into(holder.image);
+        LazyHeaders.Builder lazyHeaderBuilder = new LazyHeaders.Builder();
+        for (Map.Entry<String, String> entry: headers.entrySet()){
+            lazyHeaderBuilder.addHeader(entry.getKey(), entry.getValue());
+        }
+        GlideUrl glideUrl = new GlideUrl(
+                images.get(position),
+                lazyHeaderBuilder.build()
+        );
+
+        Glide.with(activity).load(glideUrl).into(holder.image);
         ColorMatrix matrix = new ColorMatrix();
         if (selectedItem != position) {
             matrix.setSaturation(0);

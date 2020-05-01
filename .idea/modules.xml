@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Desktop-ZGallery.iml" filepath="$PROJECT_DIR$/Desktop-ZGallery.iml" group="ZGallery" />
       <module fileurl="file://$PROJECT_DIR$/.idea/ZGallery.iml" filepath="$PROJECT_DIR$/.idea/ZGallery.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/ZGallery-app.iml" filepath="$PROJECT_DIR$/app/ZGallery-app.iml" group="ZGallery/app" />
+      <module fileurl="file://$PROJECT_DIR$/zgallery/ZGallery-zgallery.iml" filepath="$PROJECT_DIR$/zgallery/ZGallery-zgallery.iml" group="ZGallery/zgallery" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/zgallery/zgallery.iml" filepath="$PROJECT_DIR$/zgallery/zgallery.iml" />
     </modules>

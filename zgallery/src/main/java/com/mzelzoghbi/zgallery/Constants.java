@@ -7,6 +7,7 @@ public final class Constants {
 
     public class IntentPassingParams {
         public static final String IMAGES = "images";
+        public static final String HEADERS = "headers";
         public static final String COUNT = "count";
         public static final String TOOLBAR_COLOR_ID = "toolbarColorId";
         public static final String TITLE = "title";

@@ -52,10 +52,10 @@ public class ZGalleryActivity extends BaseActivity {
 
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         // pager adapter
-        adapter = new ViewPagerAdapter(this, imageURLs, mToolbar, imagesHorizontalList);
+        adapter = new ViewPagerAdapter(this, headers, imageURLs, mToolbar, imagesHorizontalList);
         mViewPager.setAdapter(adapter);
         // horizontal list adaapter
-        hAdapter = new HorizontalListAdapters(this, imageURLs, new OnImgClick() {
+        hAdapter = new HorizontalListAdapters(this,headers, imageURLs, new OnImgClick() {
             @Override
             public void onClick(int pos) {
                 mViewPager.setCurrentItem(pos, true);
