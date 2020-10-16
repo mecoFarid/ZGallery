@@ -3,10 +3,11 @@ package com.mzelzoghbi.zgallery.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.Nullable;
-import android.support.v4.view.PagerAdapter;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import android.os.AsyncTask;
+import androidx.annotation.Nullable;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,8 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.mzelzoghbi.zgallery.R;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -83,6 +86,9 @@ public class ViewPagerAdapter extends PagerAdapter {
                     lazyHeaderBuilder.build()
             );
 
+            new SimpleTask().execute("");
+            System.out.println("mecoFarid url zg "+images.get(position));
+
             requestBuilder = Glide.with(activity).load(glideUrl);
         }else {
             requestBuilder =  Glide.with(activity).load(images.get(position));
@@ -132,5 +138,20 @@ public class ViewPagerAdapter extends PagerAdapter {
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((RelativeLayout) object);
+    }
+
+    private static class SimpleTask extends AsyncTask<String, Void, Void>{
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            try {
+                URL url = new URL("https:/www.google.com/");
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                System.out.println("mecoFarid url zg e "+urlConnection.getResponseCode());
+            } catch (Exception e){
+                System.out.println("mecoFarid url zg e "+e);
+            }
+            return null;
+        }
     }
 }
