@@ -47,7 +47,6 @@ public class GridImagesAdapter extends RecyclerView.Adapter<ImageViewHolder> {
     public void onBindViewHolder(ImageViewHolder holder, final int position) {
         RequestOptions requestOptions = new RequestOptions().placeholder(imgPlaceHolderResId != -1 ? imgPlaceHolderResId : R.drawable.placeholder);
 
-        System.out.println("mecoFarid url zg "+headers);
         RequestBuilder<Drawable> requestBuilder;
         if (!headers.isEmpty()){
 
@@ -62,7 +61,6 @@ public class GridImagesAdapter extends RecyclerView.Adapter<ImageViewHolder> {
             );
 
             requestBuilder = Glide.with(mActivity).load(glideUrl);
-            System.out.println("mecoFarid url zg "+imageURLs.get(position));
         }else {
             requestBuilder =  Glide.with(mActivity).load(imageURLs.get(position));
         }

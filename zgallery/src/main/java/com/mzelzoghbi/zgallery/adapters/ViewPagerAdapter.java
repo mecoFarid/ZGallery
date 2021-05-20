@@ -1,13 +1,17 @@
 package com.mzelzoghbi.zgallery.adapters;
 
+import android.animation.TimeInterpolator;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
+
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +19,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
@@ -24,10 +29,10 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.mzelzoghbi.zgallery.Constants;
 import com.mzelzoghbi.zgallery.R;
+import com.mzelzoghbi.zgallery.util.Utils;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,6 +52,10 @@ public class ViewPagerAdapter extends PagerAdapter {
     private boolean isShowing = true;
     private Toolbar toolbar;
     private RecyclerView imagesHorizontalList;
+    private int colorCaptionTextResId;
+    private int colorCaptionBgResId;
+    private boolean enableCaption;
+    private float captionTextSize;
 
     public ViewPagerAdapter(Activity activity, HashMap<String, String> headers, ArrayList<String> images, Toolbar toolbar, RecyclerView imagesHorizontalList) {
         this.activity = activity;
@@ -55,6 +64,11 @@ public class ViewPagerAdapter extends PagerAdapter {
         this.headers = headers;
         this.toolbar = toolbar;
         this.imagesHorizontalList = imagesHorizontalList;
+
+        colorCaptionTextResId = activity.getIntent().getIntExtra(Constants.IntentPassingParams.COLOR_CAPTION_TEXT, android.R.color.darker_gray);
+        colorCaptionBgResId = activity.getIntent().getIntExtra(Constants.IntentPassingParams.COLOR_CAPTION_BG, android.R.color.white);
+        enableCaption = activity.getIntent().getBooleanExtra(Constants.IntentPassingParams.ENABLE_CAPTION, false);
+        captionTextSize = activity.getIntent().getFloatExtra(Constants.IntentPassingParams.CAPTION_TEXT_SIZE, 12f);
     }
 
     @Override
@@ -72,8 +86,12 @@ public class ViewPagerAdapter extends PagerAdapter {
         View itemView = mLayoutInflater.inflate(R.layout.z_pager_item, container, false);
 
         final ImageView imageView = (ImageView) itemView.findViewById(R.id.iv);
+        final TextView captionView = (TextView) itemView.findViewById(R.id.caption);
+        initCaptionViewStyle(captionView);
 
         RequestBuilder<Drawable> requestBuilder;
+        String filePath = images.get(position);
+        captionView.setText(Utils.getFileName(filePath));
         if (!headers.isEmpty()){
 
             LazyHeaders.Builder lazyHeaderBuilder = new LazyHeaders.Builder();
@@ -82,16 +100,13 @@ public class ViewPagerAdapter extends PagerAdapter {
             }
 
              GlideUrl glideUrl = new GlideUrl(
-                    images.get(position),
+                    filePath,
                     lazyHeaderBuilder.build()
             );
 
-            new SimpleTask().execute("");
-            System.out.println("mecoFarid url zg "+images.get(position));
-
             requestBuilder = Glide.with(activity).load(glideUrl);
         }else {
-            requestBuilder =  Glide.with(activity).load(images.get(position));
+            requestBuilder =  Glide.with(activity).load(filePath);
         }
 
         requestBuilder.listener(new RequestListener<Drawable>() {
@@ -109,12 +124,17 @@ public class ViewPagerAdapter extends PagerAdapter {
                     public void onPhotoTap(View view, float x, float y) {
                         if (isShowing) {
                             isShowing = false;
-                            toolbar.animate().translationY(-toolbar.getBottom()).setInterpolator(new AccelerateInterpolator()).start();
-                            imagesHorizontalList.animate().translationY(imagesHorizontalList.getBottom()).setInterpolator(new AccelerateInterpolator()).start();
+                            float transformBy = -toolbar.getBottom();
+                            TimeInterpolator interpolator = new AccelerateInterpolator();
+                            toolbar.animate().translationY(transformBy).setInterpolator(interpolator).start();
+                            captionView.animate().translationY(transformBy).setInterpolator(interpolator).start();
+                            imagesHorizontalList.animate().translationY(imagesHorizontalList.getBottom()).setInterpolator(interpolator).start();
                         } else {
                             isShowing = true;
-                            toolbar.animate().translationY(0).setInterpolator(new DecelerateInterpolator()).start();
-                            imagesHorizontalList.animate().translationY(0).setInterpolator(new DecelerateInterpolator()).start();
+                            TimeInterpolator interpolator = new DecelerateInterpolator();
+                            toolbar.animate().translationY(0).setInterpolator(interpolator).start();
+                            captionView.animate().translationY(0).setInterpolator(interpolator).start();;
+                            imagesHorizontalList.animate().translationY(0).setInterpolator(interpolator).start();
                         }
                     }
 
@@ -140,18 +160,13 @@ public class ViewPagerAdapter extends PagerAdapter {
         container.removeView((RelativeLayout) object);
     }
 
-    private static class SimpleTask extends AsyncTask<String, Void, Void>{
+    private void initCaptionViewStyle(TextView captionView){
+        captionView.setVisibility(enableCaption ? View.VISIBLE : View.GONE);
 
-        @Override
-        protected Void doInBackground(String... strings) {
-            try {
-                URL url = new URL("https:/www.google.com/");
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                System.out.println("mecoFarid url zg e "+urlConnection.getResponseCode());
-            } catch (Exception e){
-                System.out.println("mecoFarid url zg e "+e);
-            }
-            return null;
+        if (enableCaption) {
+            captionView.setBackgroundColor(captionView.getResources().getColor(colorCaptionBgResId));
+            captionView.setTextColor(captionView.getResources().getColor(colorCaptionTextResId));
+            captionView.setTextSize(captionTextSize);
         }
     }
 }

@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <ProgressBar
@@ -9,11 +10,21 @@
         android:layout_height="40dp"
         android:layout_centerInParent="true" />
 
+    <TextView
+        android:id="@+id/caption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.AppCompat.Caption"
+        android:padding="8dp"
+        android:visibility="gone"
+        tools:text="Sksjdfhgsfjhgsdhjfg"/>
+
     <ImageView
         android:id="@+id/iv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
+        android:layout_below="@id/caption"
+        android:layout_alignWithParentIfMissing="true"
         android:clipChildren="false"
         android:clipToPadding="true"
         android:paddingBottom="80dp" />

@@ -21,6 +21,10 @@ public class ZGrid {
     private int toolbarColor = -1;
     private int imgPlaceHolderResId = -1;
     private ZColor color;
+    private int colorCaptionTextResId = -1;
+    private int colorCaptionBgResId = -1;
+    private float captionTextSizeResId = -1;
+    private boolean enableCaption = false;
 
     private ZGrid() {
     }
@@ -101,6 +105,43 @@ public class ZGrid {
         this.color = color;
         return this;
     }
+
+    /**
+     * Setting caption text color
+     * @return
+     */
+    public ZGrid setCaptionTextColorResId(int color) {
+        this.colorCaptionTextResId = color;
+        return this;
+    }
+
+    /**
+     * Setting caption text color
+     * @return
+     */
+    public ZGrid setCaptionBackgroundColorResId(int color) {
+        this.colorCaptionBgResId = color;
+        return this;
+    }
+
+    /**
+     * Setting caption text size
+     * @return
+     */
+    public ZGrid setCaptionTextSizeResId(float textSizeResId) {
+        this.captionTextSizeResId = textSizeResId;
+        return this;
+    }
+
+    /**
+     * Setting enable/disable caption
+     * @return
+     */
+    public ZGrid setCaptionEnabled(boolean enable) {
+        this.enableCaption = enable;
+        return this;
+    }
+
     /**
      * Start the grid activity with builder settings
      */
@@ -113,6 +154,17 @@ public class ZGrid {
         gridActivity.putExtra(Constants.IntentPassingParams.TOOLBAR_COLOR_ID, toolbarColor);
         gridActivity.putExtra(Constants.IntentPassingParams.IMG_PLACEHOLDER, imgPlaceHolderResId);
         gridActivity.putExtra(Constants.IntentPassingParams.TOOLBAR_TITLE_COLOR, color);
+
+        if (colorCaptionBgResId > -1) {
+            gridActivity.putExtra(Constants.IntentPassingParams.COLOR_CAPTION_BG, colorCaptionBgResId);
+        }
+        if (colorCaptionTextResId > -1) {
+            gridActivity.putExtra(Constants.IntentPassingParams.COLOR_CAPTION_TEXT, colorCaptionTextResId);
+        }
+        if (captionTextSizeResId > -1) {
+            gridActivity.putExtra(Constants.IntentPassingParams.CAPTION_TEXT_SIZE, captionTextSizeResId);
+        }
+        gridActivity.putExtra(Constants.IntentPassingParams.ENABLE_CAPTION, enableCaption);
         mActivity.startActivity(gridActivity);
     }
 }
